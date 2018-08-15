@@ -1,20 +1,136 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="row my-modal">
+  <div class="col-12 header">
+    <div class="row">
+      <div class="col-1 offset-1 img"><img src="../assets/logo-transparent.png" alt=""></div>
+      <div class="col-6 offset-4">
+        <div class="row header-right">
+          <div class="col-1 offset-6 icon"><fa-icon [icon]="Fa.faSearch"></fa-icon></div>
+          <div class="col-1 icon"><fa-icon [icon]="Fa.faBell"></fa-icon></div>
+          <div class="col-1 icon"><fa-icon [icon]="Fa.faComment"></fa-icon></div>
+          <div class="col-1 icon"><fa-icon [icon]="Fa.faThLarge"></fa-icon></div>
+          <div class="col-1 icon-image"><img src="../assets/Candice.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-10 offset-1">
+    <div class="row content-header">
+      <div class="col-1 offset-1 content-img"><img src="../assets/candis.jpg" alt=""></div>
+      <div class="col-5 offset-5">
+        <div class="row">
+          <div class="col-3 offset-1 content-draft">Draft saved</div>
+          <div class="col-1 content-icon"><fa-icon [icon]="Fa.faAngleDown"></fa-icon></div>
+          <div class="col-3 offset-1 content-publish">Publish</div>
+          <div class="col-2 offset-1 content-icon-x"><fa-icon [icon]="Fa.faTimes"></fa-icon></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="savedImg" class="row">
+    <div class="col-9 offset-1">
+      <div class="row">
+        <div class="col-1">
+        </div>
+        <div class="col-11">
+          <input value={{title}} readonly type="text" class="form-control input-title">
+        </div>
+      </div>
+    </div>
+    <div class="col-9 offset-1">
+      <div class="row">
+        <div class="col-11 offset-1">
+          <span class="form-control">{{text}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-9 offset-1">
+      <div class="row">
+        <div *ngFor="let post of postArray" class="col-11 offset-1">
+          <img src={{post}} class="big-img">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="!savedImg" class="col-9 offset-1">
+    <div class="row">
+      <div class="col-1">
+        <label *ngIf="title.length > 0 && titleOn">Title</label>
+      </div>
+      <div class="col-11">
+        <input [(ngModel)]="title" (blur)="titleOffF()" (focus)="titleOnF()" type="text" class="form-control input-title" placeholder="Type something">
+      </div>
+      <div class="col-11 offset-1">
+        <div class="title-border"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-9 offset-1">
+    <div *ngIf="!savedImg" class="row">
+      <div class="col-11 offset-1">
+        <input type="text" [(ngModel)]="text" class="form-control text"  aria-describedby="emailHelp" placeholder="Type something">
+      </div>
+      <div class="col-11 offset-1">
+        <div class="title-border"></div>
+      </div>
+    </div>
+    <div class="row" *ngIf="showImg">
+      <div class="col-9 offset-1 url">
+        <div *ngIf="imgUrl" class="hover" id="hover"><img class="hovered-img" src={{imgUrl}} alt=""></div>
+        <input [(ngModel)]="imgUrl" type="text" class="form-control text url" placeholder="Enter Url">
+      </div>
+      <div class="col-2">
+        <button (click)="addImgUrl()" type="button" class="btn btn-outline-secondary">Add photo</button>
+      </div>
+      <div class="col-11 offset-1">
+        <div class="title-border"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1 plus" id="dropdownMenuButton" data-toggle="dropdown">
+        <fa-icon class="plus-icon" *ngIf="text.length > 0 || savedImg" [icon]="Fa.faPlusCircle"></fa-icon>
+      </div>
+      <div class="dropdown-menu">
+        <fa-icon data-toggle="modal" data-target="#exampleModal" [icon]="Fa.faCamera"></fa-icon> |
+        <fa-icon [icon]="Fa.faLink" (click)="showImgF()"></fa-icon>
+      </div>
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add image</h5>
+              <label for="upload-photo" class="label-photo"><fa-icon [icon]="Fa.faCamera"></fa-icon></label>
+              <input id="upload-photo" accept="image/x-png,image/gif,image/jpeg" type="file" class="upload-photo">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" (click)="onClick($event)">
+              <img class="modal-big-img" src={{file}} alt="">
+              <div *ngIf="!file" class="clearfix">
+                <nz-upload
+                  nzAction="http://localhost:3000/users/"
+                  nzListType="picture-card"
+                  [nzMultiple]="true"
+                  [(nzFileList)]="fileList"
+                  [nzShowButton]="fileList.length < 200"
+                  [nzPreview]="handlePreview">
+                  <div class="ant-upload-text">Upload</div>
+                </nz-upload>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button *ngIf="file" type="button" (click)="back()" class="btn btn-light"><fa-icon [icon]="Fa.faArrowAltCircleLeft"></fa-icon></button>
+              <button *ngIf="file" data-dismiss="modal" type="button" (click)="addImage()" class="btn btn-primary">Save changes</button>
+              <button *ngIf="!file" type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
 
